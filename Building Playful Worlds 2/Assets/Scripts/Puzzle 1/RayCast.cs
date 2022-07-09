@@ -12,6 +12,7 @@ public class RayCast : MonoBehaviour
     private ColorChanger RayCastedObj;
 
     [SerializeField] private KeyCode PressButton = KeyCode.Mouse0;
+    [SerializeField] private KeyCode WallButton = KeyCode.Mouse0;
     [SerializeField] private KeyCode PressReset = KeyCode.Mouse0;
     [SerializeField] private Image CrossHair = null;
     private bool IsCrossHairActive;
@@ -37,12 +38,21 @@ public class RayCast : MonoBehaviour
 
                 if (Input.GetKeyDown(PressButton) && hit.collider.GetComponent<Button>())
                 {
+                    FindObjectOfType<AudioManager>().Play("Button");
                     Button button = hit.collider.GetComponent<Button>();
                     button.ButtonPressed();
                 }
 
+                if (Input.GetKeyDown(WallButton) && hit.collider.GetComponent<ColorButton>())
+                {
+                    FindObjectOfType<AudioManager>().Play("Button");
+                    ColorButton cb = hit.collider.GetComponent<ColorButton>();
+                    cb.ButtonPressed();
+                }
+
                 if (Input.GetKeyDown(PressReset) && hit.collider.GetComponent<ResetButton>())
                 {
+                    FindObjectOfType<AudioManager>().Play("Button");
                     ResetButton resetbutton = hit.collider.GetComponent<ResetButton>();
                     resetbutton.ResetPressed();
                 }

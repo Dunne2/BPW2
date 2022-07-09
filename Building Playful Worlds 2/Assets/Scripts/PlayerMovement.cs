@@ -9,10 +9,11 @@ public class PlayerMovement : MonoBehaviour
 
     public float speed = 12;
     public float gravity = -9.81f;
+    public float jumpHeight = 3f;
 
     public Transform groundCheck;
     public float groundDistance = 0.4f;
-    public LayerMask groundMask;
+    public LayerMask groundedlayers;
 
     Vector3 velocity;
     bool isGrounded;
@@ -20,18 +21,25 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+        RaycastHit hit;
+        isGrounded = Physics.Raycast(groundCheck.position, transform.up * -1, out hit , groundDistance, groundedlayers);
 
         if (isGrounded && velocity.y < 0)
         {
             velocity.y = -2f;
         }
+        
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
 
         Vector3 move = transform.right * x + transform.forward * z;
 
         controller.Move(move * speed *  Time.deltaTime);
+
+        if(Input.GetButtonDown("Jump") && isGrounded)
+        {
+            velocity.y += Mathf.Sqrt(jumpHeight * -2 * gravity);
+        }
 
         velocity.y += gravity * Time.deltaTime;
 
